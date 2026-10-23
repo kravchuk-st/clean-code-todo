@@ -40,8 +40,7 @@ const addTask = function () {
   if (!taskText) return;
   const listItem = createNewTaskElement(taskText);
 
-  incompleteTaskHolder.appendChild(listItem);
-  bindTaskEvents(listItem, moveTaskToCompleted);
+  moveTask(listItem, incompleteTaskHolder, moveTaskToCompleted);
 
   taskInput.value = '';
 };
@@ -71,16 +70,17 @@ const deleteTask = function () {
   taskList.removeChild(listItem);
 };
 
+const moveTask = function (listItem, targetHolder, nextHandler) {
+  targetHolder.appendChild(listItem);
+  bindTaskEvents(listItem, nextHandler);
+};
+
 const moveTaskToCompleted = function () {
-  const listItem = this.parentNode;
-  completedTasksHolder.appendChild(listItem);
-  bindTaskEvents(listItem, moveTaskToIncomplete);
+  moveTask(this.parentNode, completedTasksHolder, moveTaskToIncomplete);
 };
 
 const moveTaskToIncomplete = function () {
-  const listItem = this.parentNode;
-  incompleteTaskHolder.appendChild(listItem);
-  bindTaskEvents(listItem, moveTaskToCompleted);
+  moveTask(this.parentNode, incompleteTaskHolder, moveTaskToCompleted);
 };
 
 addButton.addEventListener('click', addTask);
