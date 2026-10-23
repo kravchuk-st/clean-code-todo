@@ -41,7 +41,7 @@ const addTask = function () {
   const listItem = createNewTaskElement(taskText);
 
   incompleteTaskHolder.appendChild(listItem);
-  bindTaskEvents(listItem, taskCompleted);
+  bindTaskEvents(listItem, moveTaskToCompleted);
 
   taskInput.value = '';
 };
@@ -52,9 +52,9 @@ const editTask = function () {
   const editInput = listItem.querySelector('input[type=text]');
   const label = listItem.querySelector('label');
   const editBtn = listItem.querySelector('.edit');
-  const containsClass = listItem.classList.contains('editMode');
+  const isEditMode = listItem.classList.contains('editMode');
 
-  if (containsClass) {
+  if (isEditMode) {
     label.innerText = editInput.value;
     editBtn.innerText = 'Edit';
   } else {
@@ -67,38 +67,38 @@ const editTask = function () {
 
 const deleteTask = function () {
   const listItem = this.parentNode;
-  const ul = listItem.parentNode;
-  ul.removeChild(listItem);
+  const taskList = listItem.parentNode;
+  taskList.removeChild(listItem);
 };
 
-const taskCompleted = function () {
+const moveTaskToCompleted = function () {
   const listItem = this.parentNode;
   completedTasksHolder.appendChild(listItem);
-  bindTaskEvents(listItem, taskIncomplete);
+  bindTaskEvents(listItem, moveTaskToIncomplete);
 };
 
-const taskIncomplete = function () {
+const moveTaskToIncomplete = function () {
   const listItem = this.parentNode;
   incompleteTaskHolder.appendChild(listItem);
-  bindTaskEvents(listItem, taskCompleted);
+  bindTaskEvents(listItem, moveTaskToCompleted);
 };
 
 addButton.addEventListener('click', addTask);
 
-const bindTaskEvents = function (taskListItem, checkBoxEventHandler) {
+const bindTaskEvents = function (taskListItem, onCheckboxChange) {
   const checkBox = taskListItem.querySelector('input[type=checkbox]');
   const editButton = taskListItem.querySelector('button.edit');
   const deleteButton = taskListItem.querySelector('button.delete');
 
   editButton.onclick = editTask;
   deleteButton.onclick = deleteTask;
-  checkBox.onchange = checkBoxEventHandler;
+  checkBox.onchange = onCheckboxChange;
 };
 
 for (let i = 0; i < incompleteTaskHolder.children.length; i++) {
-  bindTaskEvents(incompleteTaskHolder.children[i], taskCompleted);
+  bindTaskEvents(incompleteTaskHolder.children[i], moveTaskToCompleted);
 }
 
 for (let i = 0; i < completedTasksHolder.children.length; i++) {
-  bindTaskEvents(completedTasksHolder.children[i], taskIncomplete);
+  bindTaskEvents(completedTasksHolder.children[i], moveTaskToIncomplete);
 }
